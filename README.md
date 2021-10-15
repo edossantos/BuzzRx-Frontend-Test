@@ -84,7 +84,7 @@ drugTopList(){
 
 5. Refactor any code that you see that is repeating it self. DRY.
 
-## Bonus: If you have enough time and want to give a style refresh to the Drug Price Page please fee free.
+## Bonus: If you have enough time and want to give a style refresh to the Drug Price Page please feel free.
      
 
 
