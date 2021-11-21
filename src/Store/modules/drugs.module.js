@@ -14,7 +14,7 @@ const state = {
       drug_prices: []
     }
 }
- 
+
 const getters = {
   getTopDrugsList: state => state.topDrugsList,
   getSelectedDrugName: state => state.selectedDrug.name,
@@ -39,8 +39,10 @@ const actions = {
     commit('SET_SELECTED_DRUG_NAME', payload)
   },
   async drugOptions({commit}, payload){
+    console.log('from the store', payload)
     await axios.get(`${DRUG_SERVICE_URL}options`, {params: {...payload, key: DRUG_SERVICE_KEY}}, ).then(response => {
       const data = response.data;
+      // console.log(data)
       commit('SET_SELECTED_DRUG_TYPE', payload.drug_type)
       commit('SET_SELECTED_DRUG_NAMES', {drug_names: data.drug_names, ...payload})
       commit('SET_SELECTED_DRUG_FORMS', Object.values(data.data.forms))
@@ -61,7 +63,7 @@ const actions = {
     console.log(payload)
     //HERE YOU CAN MAKE YOUR API CALL TO GET THE DRUG PRICES
     //Note: Setting this line to add example data to drug_prices
-    
+
     commit('SET_SELECTED_DRUG_PRICES', [{
       "BrandGeneric": 1,
       "BrandGeneric_formatted": "Generic",

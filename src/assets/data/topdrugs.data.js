@@ -61,7 +61,6 @@ const sortArr = (arr) => {
   return arr.sort(sorter);
 };
 const copyOfTopDrugs = sortArr(topDrugs);
-console.log(copyOfTopDrugs);
 
 // export default topDrugs;
 export default copyOfTopDrugs
