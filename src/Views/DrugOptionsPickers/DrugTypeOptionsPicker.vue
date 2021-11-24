@@ -28,6 +28,12 @@
 import DrugOptionsPickerCommon from '@/Mixins/DrugOptionsPicker.common';
 import { mapActions, mapGetters } from 'vuex';
 export default {
+  data() {
+    return {
+      realDrugType: '',
+    };
+  },
+
   mixins: [DrugOptionsPickerCommon],
   computed: {
     ...mapGetters('drugs', [
@@ -35,7 +41,12 @@ export default {
       'getSelectedDrugNameOption',
       'getSelectedDrugNameList',
     ]),
-    ...mapActions('drugs', ['setSelectedDrugName', 'drugOptions']),
+    ...mapActions('drugs', [
+      'setSelectedDrugName',
+      'setSelectedDrugType',
+      'drugOptions',
+      'setSelectedRealDrugData',
+    ]),
     drugNameList() {
       return this.getSelectedDrugNameList;
     },
@@ -44,20 +55,36 @@ export default {
     },
   },
   methods: {
+    pullDrugAndTypeFromLabel(label) {
+      const sliceIdx = label.indexOf('(');
+      const realDrugSelected = label.slice(0, sliceIdx);
+      const realType = label[sliceIdx + 1];
+      const realDrug = {
+        ...this.$store.state.drugs.selectedDrug,
+        name: realDrugSelected,
+        type: realType,
+      };
+      return realDrug;
+    },
     radioInputSelectedAction(event) {
       //2. This is where you capture the change of the drug type (drugName)
       console.log('THE DRUG TYPE WAS CHANGED');
-      console.log(event);
-      //find real drug values
-      const parensIdx = event.label.indexOf('(');
-      const selectedDrug = event.label.slice(0, parensIdx);
-      const selectedDrugType = "'" + event.label[parensIdx + 1] + "'";
+      console.log('after radio button:', event);
 
-      this.$store.commit('drugs/SET_SELECTED_DRUG_NAME', {
-        name: selectedDrug,
-        drug_type: selectedDrugType,
-      });
-      console.log(this.$store.getters.getSelectedDrugNameOption);
+      // grab the relevant data needed in the event and store in an object. then commit the details to the store. then call the drug options action in right lifecycle .
+
+      const realDrug = this.pullDrugAndTypeFromLabel(event.label);
+      //dispatch once you have the real name and real type
+      // ***
+      this.$store.dispatch('drugs/setSelectedDrugName', realDrug.name);
+
+
+      // now, the updated state has the correct selected drug - pass to the store
+      this.$store.dispatch('setSelectedRealDrugData', realDrug);
+      console.log(this.$store.state)
+
+      // the below will be called upon the proper lifecycle method in the proper page
+      // this.$store.dispatch('drugs/drugOptions', realDrug);
     },
   },
 };
